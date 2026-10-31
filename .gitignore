@@ -1,5 +1,6 @@
 *
 !index.html
+!og-image.png
 worker/
 !worker/steam-cors.js
 !worker/wrangler.toml
