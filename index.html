@@ -270,8 +270,8 @@ async function doDownload(id){
   status('Starting download...');
   const key = downloadKeyUrl.split('/').pop();
   const slug = (MOD_DB[id] && MOD_DB[id].title ? MOD_DB[id].title : '')
-    .toLowerCase().replace(/[^a-z0-9]+/g,'').replace(/^\d+_/,'').slice(0,60) || 'mod';
-  const fname = id + '_' + slug + '.zip';
+    .toLowerCase().replace(/[^a-z0-9]+/g,'').replace(/^\d+_/,'').slice(0,60);
+  const fname = slug ? id + '_' + slug + '.zip' : id + '.zip';
   try{
     const r = await fetch('https://cdn.ggntw.ru/' + key, {mode:'cors'});
     if (!r.ok) throw new Error('CDN ' + r.status);
