@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steam Workshop Downloader</title>
+<style>
+:root{
+  --canvas:#ffffff;
+  --ink:#101010;
+  --muted:#555555;
+  --soft:#999999;
+  --line:#e0e0e0;
+  --line-hover:#999999;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--canvas);color:var(--ink);font:12px/1.5 var(--mono);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:40px 16px 80px}
+
+/* every label is uppercase tracked mono */
+.eyebrow{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;color:var(--soft);margin:0 0 12px}
+.micro{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
+hr.rule{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* hero */
+.hero{padding:56px 0 40px}
+.hero h1{font-size:54px;font-weight:400;line-height:1;letter-spacing:0.025em;margin:0 0 16px}
+.hero p{font-size:12px;color:var(--muted);max-width:56ch;margin:0 0 28px}
+.input-row{display:flex;gap:8px;flex-wrap:wrap}
+input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:4px;padding:10px 14px;font:12px var(--mono);background:var(--canvas);color:var(--ink);outline:none;transition:border-color .12s ease}
+input::placeholder{color:var(--soft)}
+input:focus{border-color:var(--line-hover)}
+.btn{border:1px solid var(--line);border-radius:9999px;padding:10px 16px;font:12px var(--mono);text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;background:transparent;color:var(--muted);transition:all .12s ease}
+.btn:hover:not(:disabled){border-color:var(--line-hover);color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-primary:hover:not(:disabled){background:var(--soft);border-color:var(--soft);color:#fff}
+#status{margin-top:12px;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--soft)}
+.hint{margin:8px 0 0;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--soft)}
+
+/* preview: museum tile */
+#preview{margin-top:0;padding:40px 0}
+.tile{background:var(--canvas);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+#shotMain{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#fafafa}
+#shotPh{width:100%;aspect-ratio:16/9;display:none;align-items:center;justify-content:center;font:10px var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--soft);background:repeating-linear-gradient(45deg,#fafafa 0 12px,#f2f2f2 12px 24px)}
+.shot-strip{display:flex;gap:8px;overflow-x:auto;padding:8px}
+.shot-strip img{height:48px;flex:0 0 auto;border-radius:4px;cursor:pointer;opacity:.55;transition:opacity .12s ease}
+.shot-strip img:hover{opacity:.85}
+.shot-strip img.sel{opacity:1;outline:1px solid var(--ink);outline-offset:1px}
+
+/* metadata strip under image — the catalog pattern */
+.meta-strip{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 12px;border-top:1px solid var(--line)}
+.meta-strip .l{font-size:11px;color:var(--muted)}
+.meta-strip .r{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
+#title{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;line-height:1.2;margin:32px 0 12px;color:var(--ink)}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px}
+.badge{border:1px solid var(--line);border-radius:0;padding:4px 8px;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:0 0 40px}
+.meta-card{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.meta-card h3{margin:0 0 4px;font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:0.08em;color:var(--soft)}
+.meta-card div{font-size:12px;color:var(--ink);word-break:break-word;overflow-wrap:break-word}
+
+/* description */
+.section-label{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;color:var(--soft);margin:0 0 16px}
+#desc{font-size:12px;line-height:1.7;color:var(--muted);position:relative;overflow:hidden;max-width:72ch;overflow-wrap:break-word;word-break:break-word}
+#desc.collapsed{max-height:200px}
+#desc.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(transparent,#fff)}
+#desc h3,#desc h4,#desc h5{color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:20px 0 8px}
+#desc a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+#desc img{max-width:100%;height:auto;display:block;margin:8px 0}
+#desc table{border-collapse:collapse;margin:12px 0;max-width:100%;display:block;overflow-x:auto}
+#desc td{padding:4px 12px 4px 0;vertical-align:top}
+#desc ul{margin:8px 0;padding-left:20px}
+#showMore{display:none;margin-top:12px;padding:8px 16px;border:1px solid var(--line);border-radius:9999px;background:transparent;color:var(--muted);font:12px var(--mono);text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;transition:all .12s ease}
+#showMore.visible{display:inline-block}
+#showMore:hover{border-color:var(--line-hover);color:var(--ink)}
+
+/* download band */
+#downloadSection{padding:40px 0 0}
+#downloadSection h2{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;color:var(--soft);margin:0 0 12px}
+#downloadInfo{font-size:12px;color:var(--muted);margin:0 0 20px}
+.meta-note{margin-top:16px;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--soft)}
+
+/* skeleton */
+.skel{display:inline-block;height:1.1em;background:#f0f0f0;animation:pulse 1.2s ease-in-out infinite}
+.ph{background:
+  repeating-linear-gradient(45deg,#fafafa 0 12px,#f2f2f2 12px 24px);
+  position:relative}
+.ph::after{content:attr(data-ph);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:10px var(--mono);text-transform:uppercase;letter-spacing:0.08em;color:var(--soft)}
+img.ph{color:var(--soft)}
+.skel-img{background:#f0f0f0!important;animation:pulse 1.2s ease-in-out infinite}
+.badge-skel{width:70px;height:22px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* responsive */
+@media(max-width:720px){
+  .hero{padding:32px 0 24px}
+  .hero h1{font-size:32px}
+  .input-row{gap:6px}
+  input{min-width:0;width:100%;flex:none}
+  .btn{width:100%}
+  #title{font-size:16px;letter-spacing:0.08em}
+  .section-label,.eyebrow,#downloadSection h2{font-size:16px;letter-spacing:0.08em}
+  .meta-grid{grid-template-columns:1fr 1fr}
+  #preview{padding:24px 0}
+  .shot-strip img{height:36px}
+}
+::selection{background:var(--ink);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Workshop Browser</p>
+    <h1>STEAM WORKSHOP DOWNLOADER</h1>
+    <p>Paste a Workshop link. Preview loads first; the download link is requested only when you click.</p>
+    <div class="input-row">
+      <input id="link" type="url" placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=..." value="https://steamcommunity.com/sharedfiles/filedetails/?id=3803506841">
+      <button id="loadBtn" class="btn btn-primary">Load</button>
+    </div>
+    <div id="status">Ready.</div>
+    <p class="hint">Max file size 500 MB</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="preview" hidden>
+    <div class="tile">
+      <div id="shotPh">LOADING PREVIEW</div>
+      <img id="shotMain" alt="">
+    </div>
+    <div id="shotStrip" class="shot-strip"></div>
+    <h2 id="title"></h2>
+    <div id="tags" class="badges"></div>
+    <div class="meta-grid">
+      <div class="meta-card"><h3>Item ID</h3><div id="itemId"></div></div>
+      <div class="meta-card"><h3>Updated</h3><div id="updated"></div></div>
+      <div class="meta-card"><h3>Size</h3><div id="size"></div></div>
+      <div class="meta-card"><h3>Source</h3><div id="server"></div></div>
+    </div>
+    <p class="section-label">Description</p>
+    <div id="desc" class="collapsed"></div>
+    <button id="showMore">Show more</button>
+  </section>
+
+  <hr class="rule">
+
+  <section id="downloadSection" hidden>
+    <h2>Download</h2>
+    <p id="downloadInfo">No mod loaded.</p>
+    <button id="downloadBtn" class="btn btn-primary" disabled>Download ZIP</button>
+    <p class="meta-note">GGNTW direct · requested on click only</p>
+  </section>
+</div>
+
+<script>
+const linkInput = document.getElementById('link');
+const statusEl = document.getElementById('status');
+const loadBtn = document.getElementById('loadBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const downloadInfo = document.getElementById('downloadInfo');
+const preview = document.getElementById('preview');
+const downloadSection = document.getElementById('downloadSection');
+
+let MOD_DB = {};
+let currentId = null;
+let downloadKeyUrl = null;
+const WORKER_URL = 'https://steam-meta.yoopug.workers.dev/';
+
+function status(m){ statusEl.textContent = m; }
+function setShotPlaceholder(src, label){
+  const shotMain = document.getElementById('shotMain');
+  const shotPh = document.getElementById('shotPh');
+  shotMain.onerror = () => {
+    shotMain.hidden = true;
+    shotMain.removeAttribute('src');
+    shotPh.textContent = (label || 'No image available').toUpperCase();
+    shotPh.hidden = false;
+  };
+  const showImg = () => { shotPh.style.display = 'none'; shotMain.style.display = 'block'; };
+  const showPh  = (txt) => { shotPh.textContent = (txt || 'No image available').toUpperCase(); shotPh.style.display = 'flex'; shotMain.style.display = 'none'; };
+
+  shotMain.onload = showImg;
+  shotMain.onerror = () => { shotMain.removeAttribute('src'); showPh(label || 'No image available'); };
+
+  if (src){
+    shotMain.style.display = 'none';
+    shotMain.src = src;
+    // synchronous cache hit: onload may never fire
+    if (shotMain.complete && shotMain.naturalWidth > 0){ showImg(); }
+    else { showPh('Loading preview'); }
+  } else {
+    shotMain.removeAttribute('src');
+    showPh(label || 'No image available');
+  }
+}
+function parseId(u){ const m = String(u).match(/[?&]id=(\d+)/); return m ? m[1] : null; }
+
+function steamDescToHtml(raw){
+  let t = String(raw || '');
+  t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t = t.replace(/\[h1\]([\s\S]*?)\[\/h1\]/gi, '<h3>$1</h3>');
+  t = t.replace(/\[h2\]([\s\S]*?)\[\/h2\]/gi, '<h4>$1</h4>');
+  t = t.replace(/\[h3\]([\s\S]*?)\[\/h3\]/gi, '<h5>$1</h5>');
+  t = t.replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<b>$1</b>');
+  t = t.replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<i>$1</i>');
+  t = t.replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>');
+  t = t.replace(/\[strike\]([\s\S]*?)\[\/strike\]/gi, '<s>$1</s>');
+  t = t.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, '<pre style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:4px;padding:10px;overflow-x:auto;font-size:11px;max-width:100%;white-space:pre-wrap">$1</pre>');
+  t = t.replace(/\[quote=([^\]]*)\]([\s\S]*?)\[\/quote\]/gi, '<blockquote style="border-left:2px solid #101010;margin:12px 0;padding:2px 14px;color:#555"><small>$1</small><br>$2</blockquote>');
+  t = t.replace(/\[quote\]([\s\S]*?)\[\/quote\]/gi, '<blockquote style="border-left:2px solid #101010;margin:12px 0;padding:2px 14px;color:#555">$1</blockquote>');
+  t = t.replace(/\[list\]([\s\S]*?)\[\/list\]/gi, function(m, inner){
+    const items = inner.split(/\[\*\]/).filter(x=>x.trim()).map(x=>'<li>'+x.trim()+'</li>').join('');
+    return '<ul>'+items+'</ul>';
+  });
+  t = t.replace(/\[img\]([\s\S]*?)\[\/img\]/gi, '<img src="$1" alt="" loading="lazy">');
+  t = t.replace(/\[table\]([\s\S]*?)\[\/table\]/gi, function(m, inner){
+    const rows = [...inner.matchAll(/\[tr\]([\s\S]*?)\[\/tr\]/gi)].map(r=>{
+      const cells = [...r[1].matchAll(/\[td\]([\s\S]*?)\[\/td\]/gi)].map(c=>'<td>'+c[1].trim()+'</td>').join('');
+      return '<tr>'+cells+'</tr>';
+    }).join('');
+    return '<table>'+rows+'</table>';
+  });
+  t = t.replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi, '<a href="$1" target="_blank" rel="noopener">$2</a>');
+  t = t.replace(/\[url\]([\s\S]*?)\[\/url\]/gi, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  t = t.replace(/(^|\s)(https?:\/\/[^\s<]+[\w\/])/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  t = t.replace(/\r\n/g, '\n');
+  t = t.replace(/\n{2,}/g, '</p><p>');
+  t = t.replace(/\n/g, '<br>');
+  return '<p>' + t + '</p>';
+}
+
+async function fetchGGNTW(id){
+  const res = await fetch('https://api.ggntw.com/steam.request', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({url:'https://steamcommunity.com/sharedfiles/filedetails/?id=' + id})
+  });
+  if (!res.ok) throw new Error('GGNTW ' + res.status);
+  const j = await res.json();
+  if (!j.url) throw new Error('GGNTW: no url');
+  return j;
+}
+
+async function doDownload(id){
+  downloadBtn.disabled = true;
+  status('Requesting download link...');
+  try{
+    if (!downloadKeyUrl){
+      const j = await fetchGGNTW(id);
+      downloadKeyUrl = j.url;
+    }
+  }catch(e){
+    status('Error: ' + e.message);
+    downloadBtn.disabled = false;
+    return;
+  }
+  status('Starting download...');
+  const key = downloadKeyUrl.split('/').pop();
+  try{
+    const r = await fetch('https://cdn.ggntw.ru/' + key, {mode:'cors'});
+    if (!r.ok) throw new Error('CDN ' + r.status);
+    const blob = await r.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'steam-workshop-' + id + '.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    status('Download started.');
+  }catch(e){
+    window.open(downloadKeyUrl, '_blank');
+    status('Opened fallback page.');
+  }
+  downloadBtn.disabled = false;
+}
+
+async function loadMod(){
+  const id = parseId(linkInput.value);
+  if (!id){ status('No id found in that link.'); return; }
+  currentId = id;
+  downloadKeyUrl = null;
+  loadBtn.disabled = true;
+  downloadBtn.disabled = true;
+  status('Loading...');
+
+  const cached = MOD_DB[id];
+  if (cached){ renderMod(cached); return; }
+
+  renderSkeleton(id);
+  preview.hidden = false;
+  downloadSection.hidden = false;
+
+  const fastMeta = fetch('meta/' + id + '.json').then(r => r.ok ? r.json() : null).catch(()=>null);
+  const slowMeta = fetch(WORKER_URL + '?id=' + id).then(r => r.ok ? r.json() : null).catch(()=>null);
+  const gntw = fetchGGNTW(id).catch(()=>null);
+
+  gntw.then(j => {
+    if (j && j.url){
+      downloadKeyUrl = j.url;
+      downloadBtn.disabled = false;
+      document.getElementById('itemId').textContent = id;
+      document.getElementById('title').textContent = j.name || ('Steam Workshop item ' + id);
+      document.getElementById('updated').textContent = j.update || 'Unknown';
+      document.getElementById('size').textContent = j.size || 'Unknown';
+      document.getElementById('server').textContent = 'GGNTW';
+      if (j.image){ setShotPlaceholder(j.image); }
+      downloadInfo.textContent = (j.name || 'mod') + ' — ' + (j.size || 'unknown size');
+      status('Download ready. Loading full details...');
+    }
+  });
+
+  let item = await fastMeta;
+  if (!item){
+    item = await slowMeta;
+  }
+  if (item){
+    MOD_DB[id] = item;
+    renderMod(item);
+    loadBtn.disabled = false;
+    return;
+  }
+  status('Metadata unavailable — download still works.');
+  loadBtn.disabled = false;
+}
+
+function renderSkeleton(id){
+  document.getElementById('itemId').textContent = id;
+  document.getElementById('title').innerHTML = '<span class="skel" style="width:70%"></span>';
+  document.getElementById('desc').innerHTML = '<span class="skel"></span><span class="skel"></span><span class="skel" style="width:55%"></span>';
+  document.getElementById('tags').innerHTML = '<span class="skel badge-skel"></span><span class="skel badge-skel"></span><span class="skel badge-skel"></span>';
+  document.getElementById('updated').innerHTML = '<span class="skel" style="width:90px"></span>';
+  document.getElementById('size').innerHTML = '<span class="skel" style="width:60px"></span>';
+  setShotPlaceholder(null, 'Loading preview');
+  document.getElementById('shotStrip').innerHTML = '';
+  downloadInfo.textContent = 'Loading...';
+}
+
+function renderMod(item){
+  const id = item.id;
+  document.getElementById('itemId').textContent = item.id || '';
+  document.getElementById('title').textContent = item.title || ('Steam Workshop item ' + id);
+  document.getElementById('desc').innerHTML = steamDescToHtml(item.description || '');
+
+  const shots = (item.images && item.images.length) ? item.images : [];
+  const shotMain = document.getElementById('shotMain');
+  const strip = document.getElementById('shotStrip');
+  if (shots.length){
+    const toThumb = u => u.replace('imw=5000','imw=637').replace('imh=5000','imh=358');
+    strip.innerHTML = shots.map((u,i)=>'<img data-i="'+i+'" src="'+toThumb(u)+'" loading="lazy" alt="Screenshot '+(i+1)+'"'+(i===0?' class="sel"':'')+'>').join('');
+    setShotPlaceholder(shots[0]);
+    strip.onclick = e => {
+      const im = e.target.closest('img[data-i]');
+      if (!im) return;
+      strip.querySelectorAll('img').forEach(x=>x.classList.remove('sel'));
+      im.classList.add('sel');
+      setShotPlaceholder(shots[+im.dataset.i]);
+    };
+  } else {
+    setShotPlaceholder(item.preview_url);
+    strip.innerHTML = '';
+  }
+  document.getElementById('updated').textContent = item.time_updated ? new Date(item.time_updated*1000).toLocaleString() : 'Unknown';
+  document.getElementById('size').textContent = item.file_size ? (Math.round(item.file_size/1024/1024*10)/10 + ' MB') : 'Unknown';
+  document.getElementById('server').textContent = 'Steam';
+  document.getElementById('tags').innerHTML = (item.tags || []).map(t=>'<span class="badge">'+t+'</span>').join('');
+
+  const descEl = document.getElementById('desc');
+  const smBtn = document.getElementById('showMore');
+  descEl.classList.add('collapsed');
+  smBtn.textContent = 'Show more';
+  smBtn.classList.remove('visible');
+  requestAnimationFrame(()=>{
+    if (descEl.scrollHeight > 220) smBtn.classList.add('visible');
+  });
+  smBtn.onclick = () => {
+    const collapsed = descEl.classList.toggle('collapsed');
+    smBtn.textContent = collapsed ? 'Show more' : 'Show less';
+  };
+
+  preview.hidden = false;
+  downloadSection.hidden = false;
+  downloadInfo.textContent = item.title + ' — ' + (item.file_size ? Math.round(item.file_size/1024/1024*10)/10 + ' MB' : 'unknown size');
+  downloadBtn.disabled = false;
+  status('Preview ready. Click Download ZIP.');
+  loadBtn.disabled = false;
+}
+
+loadBtn.addEventListener('click', loadMod);
+downloadBtn.addEventListener('click', ()=>{ if (currentId) doDownload(currentId); });
+linkInput.addEventListener('keydown', e=>{ if (e.key === 'Enter') loadMod(); });
+</script>
+</html>

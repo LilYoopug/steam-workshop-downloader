@@ -1,0 +1,5 @@
+*
+!index.html
+worker/
+!worker/steam-cors.js
+!worker/wrangler.toml
