@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sd.luasu.app/sitemap.xml

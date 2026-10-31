@@ -1,0 +1,10 @@
+# Steam Workshop Downloader
+
+Free browser tool to preview and download Steam Workshop mods.
+
+- Paste any Steam Workshop item URL
+- See title, screenshots, description, tags, supported versions, file size, last update
+- Download the mod ZIP directly in the browser
+- No ads, no account, no limits beyond file size (500 MB)
+
+Site: https://sd.luasu.app
