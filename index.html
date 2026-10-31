@@ -29,10 +29,9 @@ hr.rule{border:none;border-top:1px solid var(--line);margin:40px 0}
 .hero p{font-size:12px;color:var(--muted);max-width:56ch;margin:0 0 28px}
 .input-row{display:flex;gap:8px;flex-wrap:wrap}
 .input-wrap{position:relative;flex:1;min-width:240px;display:flex}
-.input-wrap input{flex:1;min-width:0;width:100%;padding-right:66px}
+.input-wrap input{flex:1;min-width:0;width:100%;padding-right:38px}
 .paste-icon{position:absolute;top:50%;transform:translateY(-50%);border:none;background:none;color:var(--soft);cursor:pointer;padding:6px;display:flex;align-items:center;transition:color .12s ease}
-#pasteBtn{right:4px}
-#clearBtn{right:34px}
+#inputAction{right:4px}
 .paste-icon:hover{color:var(--ink)}
 input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:4px;padding:10px 14px;font:12px var(--mono);background:var(--canvas);color:var(--ink);outline:none;transition:border-color .12s ease}
 input::placeholder{color:var(--soft)}
@@ -124,11 +123,9 @@ img.ph{color:var(--soft)}
     <div class="input-row">
       <div class="input-wrap">
         <input id="link" type="url" placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=...">
-        <button id="pasteBtn" class="paste-icon" title="Paste" aria-label="Paste">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
-        </button>
-        <button id="clearBtn" class="paste-icon" title="Clear" aria-label="Clear" hidden>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <button id="inputAction" class="paste-icon" title="Paste" aria-label="Paste">
+          <svg id="icoPaste" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          <svg id="icoClear" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <button id="loadBtn" class="btn btn-primary">Load</button>
@@ -404,17 +401,28 @@ function renderMod(item){
 loadBtn.addEventListener('click', loadMod);
 downloadBtn.addEventListener('click', ()=>{ if (currentId) doDownload(currentId); });
 linkInput.addEventListener('keydown', e=>{ if (e.key === 'Enter') loadMod(); });
-const clearBtn = document.getElementById('clearBtn');
-linkInput.addEventListener('input', () => { clearBtn.hidden = !linkInput.value; });
-clearBtn.addEventListener('click', () => {
-  linkInput.value = '';
-  clearBtn.hidden = true;
-  linkInput.focus();
-});
-document.getElementById('pasteBtn').addEventListener('click', async () => {
+const inputAction = document.getElementById('inputAction');
+const icoPaste = document.getElementById('icoPaste');
+const icoClear = document.getElementById('icoClear');
+
+function syncInputIcon(){
+  const has = !!linkInput.value;
+  icoPaste.style.display = has ? 'none' : 'block';
+  icoClear.style.display = has ? 'block' : 'none';
+  inputAction.title = has ? 'Clear' : 'Paste';
+}
+linkInput.addEventListener('input', syncInputIcon);
+
+inputAction.addEventListener('click', async () => {
+  if (linkInput.value){
+    linkInput.value = '';
+    syncInputIcon();
+    linkInput.focus();
+    return;
+  }
   try{
     const text = await navigator.clipboard.readText();
-    if (text){ linkInput.value = text.trim(); clearBtn.hidden = false; linkInput.focus(); status('Pasted from clipboard.'); }
+    if (text){ linkInput.value = text.trim(); syncInputIcon(); linkInput.focus(); status('Pasted from clipboard.'); }
     else status('Clipboard is empty.');
   }catch(e){
     status('Clipboard blocked — long-press the field and paste manually.');
