@@ -216,7 +216,7 @@ img.ph{color:var(--soft)}
     <h2>Download</h2>
     <p id="downloadInfo">No mod loaded.</p>
     <button id="downloadBtn" class="btn btn-primary" disabled>Download ZIP</button>
-    <p class="meta-note">GGNTW direct · requested on click only</p>
+    <p class="meta-note">Direct download · requested on click only</p>
   </section>
 
   <hr class="rule">
@@ -345,15 +345,15 @@ function steamDescToHtml(raw){
   return '<p>' + t + '</p>';
 }
 
-async function fetchGGNTW(id){
+async function fetchDownload(id){
   const res = await fetch('https://api.ggntw.com/steam.request', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({url:'https://steamcommunity.com/sharedfiles/filedetails/?id=' + id})
   });
-  if (!res.ok) throw new Error('GGNTW ' + res.status);
+  if (!res.ok) throw new Error('Download service ' + res.status);
   const j = await res.json();
-  if (!j.url) throw new Error('GGNTW: no url');
+  if (!j.url) throw new Error('Download unavailable');
   return j;
 }
 
@@ -362,7 +362,7 @@ async function doDownload(id){
   status('Requesting download link...');
   try{
     if (!downloadKeyUrl){
-      const j = await fetchGGNTW(id);
+      const j = await fetchDownload(id);
       downloadKeyUrl = j.url;
     }
   }catch(e){
@@ -429,7 +429,7 @@ async function loadMod(){
 
   const fastMeta = fetch('meta/' + id + '.json').then(r => r.ok ? r.json() : null).catch(()=>null);
   const slowMeta = fetch(WORKER_URL + '?id=' + id).then(r => r.ok ? r.json() : null).catch(()=>null);
-  const gntw = fetchGGNTW(id).catch(()=>null);
+  const gntw = fetchDownload(id).catch(()=>null);
 
   gntw.then(j => {
     if (j && j.url){
@@ -439,7 +439,7 @@ async function loadMod(){
       document.getElementById('title').textContent = j.name || ('Steam Workshop item ' + id);
       document.getElementById('updated').textContent = j.update || 'Unknown';
       document.getElementById('size').textContent = j.size || 'Unknown';
-      document.getElementById('server').textContent = 'GGNTW';
+      document.getElementById('server').textContent = 'Direct';
       if (j.image){ setShotPlaceholder(j.image); }
       downloadInfo.textContent = (j.name || 'mod') + ' — ' + (j.size || 'unknown size');
       status('Download ready. Loading full details...');
