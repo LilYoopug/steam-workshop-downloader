@@ -6,11 +6,11 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjEyIiBmaWxsPSIjZmZmZmZmIi8+CjxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MiIgaGVpZ2h0PSI2MiIgcng9IjExIiBmaWxsPSJub25lIiBzdHJva2U9IiMxMDEwMTAiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMzIgMTR2MjQiIHN0cm9rZT0iIzEwMTAxMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTIyIDMwbDEwIDEwIDEwLTEwIiBzdHJva2U9IiMxMDEwMTAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0xNiA0NmgzMiIgc3Ryb2tlPSIjMTAxMDEwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=">
 <meta name="theme-color" content="#ffffff">
 <meta name="google-site-verification" content="a8aelMzchzzCHPPU4kDQToOjZ2A3lfrx9j5TgNfSTe4">
-<meta name="description" content="Free Steam Workshop downloader. Paste a Workshop link to preview screenshots, description, tags, file size and update date — then download the mod ZIP directly in your browser. No ads, no login.">
+<meta name="description" content="Paste a public Steam Workshop link to preview mods, maps, and collections. Check item details before requesting a ZIP download. No ads, no account.">
 <meta name="keywords" content="steam workshop downloader, steam mod download, workshop mod downloader, steam workshop zip, download steam mods, rimworld mods download, no ads steam downloader">
 <link rel="canonical" href="https://sd.luasu.app">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<title>Steam Workshop Downloader</title>
+<title>Steam Workshop Downloader – Preview &amp; Download Public Workshop Items</title>
 <meta property="og:title" content="Steam Workshop Downloader">
 <meta property="og:description" content="Paste a Steam Workshop link. Preview screenshots, description, versions and size — download the ZIP directly, no ads.">
 <meta property="og:type" content="website">
@@ -155,6 +155,19 @@ img.ph{color:var(--soft)}
   "url": "https://sd.luasu.app"
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"How do I download a Steam Workshop mod?","acceptedAnswer":{"@type":"Answer","text":"Copy the item's Workshop URL, paste it into the input field, press Load, then click Download ZIP. The file is fetched directly and saved to your device."}},
+    {"@type":"Question","name":"Can I download private Workshop items?","acceptedAnswer":{"@type":"Answer","text":"No. Only publicly visible Workshop items can be previewed and downloaded."}},
+    {"@type":"Question","name":"Why is my Workshop link not working?","acceptedAnswer":{"@type":"Answer","text":"The link must be a public sharedfiles/filedetails URL. Deleted, private, or region-restricted items cannot be fetched."}},
+    {"@type":"Question","name":"Is there a file size limit?","acceptedAnswer":{"@type":"Answer","text":"Downloads are recommended for items up to 500 MB. Larger items may queue or fail on the download service."}},
+    {"@type":"Question","name":"Can I download an entire Steam Workshop collection?","acceptedAnswer":{"@type":"Answer","text":"Not in one click yet. Each item must be downloaded individually by pasting its own Workshop link."}}
+  ]
+}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -205,6 +218,54 @@ img.ph{color:var(--soft)}
     <button id="downloadBtn" class="btn btn-primary" disabled>Download ZIP</button>
     <p class="meta-note">GGNTW direct · requested on click only</p>
   </section>
+
+  <hr class="rule">
+
+  <section id="about" style="padding:40px 0 0">
+    <p class="section-label">How it works</p>
+    <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
+      <ol style="padding-left:20px;margin:0 0 20px">
+        <li>Copy a public Steam Workshop item link.</li>
+        <li>Paste it into the input field above.</li>
+        <li>Review the item title, size, update date, and description.</li>
+        <li>Click Download ZIP if the item is available.</li>
+      </ol>
+    </div>
+
+    <p class="section-label">What this tool can do</p>
+    <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
+      <ul style="padding-left:20px;margin:0 0 20px">
+        <li>Preview public Workshop items before downloading</li>
+        <li>Show item ID, file size, and last updated date</li>
+        <li>Request the download only after you click</li>
+        <li>Avoid ads and unnecessary redirects</li>
+      </ul>
+    </div>
+
+    <p class="section-label">Important limitations</p>
+    <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:32px">
+      <ul style="padding-left:20px;margin:0">
+        <li>Private, deleted, or restricted Workshop items cannot be accessed.</li>
+        <li>Some items may not provide a direct downloadable file.</li>
+        <li>For large collections or games that require official tools, SteamCMD may be the more reliable option.</li>
+      </ul>
+    </div>
+
+    <p class="section-label">Frequently asked questions</p>
+    <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
+      <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">How do I download a Steam Workshop mod?</h3>
+      <p style="margin:0 0 14px">Copy the item's Workshop URL, paste it into the field above, press Load, then click Download ZIP. The file is fetched directly and saved to your device.</p>
+      <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Can I download private Workshop items?</h3>
+      <p style="margin:0 0 14px">No. Only publicly visible Workshop items can be previewed and downloaded.</p>
+      <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Why is my Workshop link not working?</h3>
+      <p style="margin:0 0 14px">The link must be a public sharedfiles/filedetails URL. Deleted, private, or region-restricted items cannot be fetched.</p>
+      <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Is there a file size limit?</h3>
+      <p style="margin:0 0 14px">Downloads are recommended for items up to 500 MB. Larger items may queue or fail on the download service.</p>
+      <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Can I download an entire Steam Workshop collection?</h3>
+      <p style="margin:0 0 14px">Not in one click yet. Each item must be downloaded individually by pasting its own Workshop link.</p>
+    </div>
+  </section>
+
 </div>
 
 <script>
