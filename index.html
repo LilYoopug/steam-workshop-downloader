@@ -500,7 +500,7 @@ function renderMod(item){
   }
   document.getElementById('updated').textContent = item.time_updated ? new Date(item.time_updated*1000).toLocaleString() : 'Unknown';
   document.getElementById('size').textContent = item.file_size ? (Math.round(item.file_size/1024/1024*10)/10 + ' MB') : 'Unknown';
-  document.getElementById('server').textContent = 'Steam';
+  document.getElementById('server').textContent = 'Steam Workshop';
   document.getElementById('tags').innerHTML = (item.tags || []).map(t=>'<span class="badge">'+t+'</span>').join('');
 
   const descEl = document.getElementById('desc');
