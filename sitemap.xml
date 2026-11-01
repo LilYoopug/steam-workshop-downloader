@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://sd.luasu.app/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://sd.luasu.app/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://sd.luasu.app/how-to-download-steam-workshop-mods</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sd.luasu.app/steam-workshop-collection-downloader</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sd.luasu.app/rimworld-workshop-downloader</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sd.luasu.app/garrys-mod-workshop-downloader</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sd.luasu.app/wallpaper-engine-workshop-downloader</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sd.luasu.app/steamcmd-guide</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

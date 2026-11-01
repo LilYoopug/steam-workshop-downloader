@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steam Workshop Collection Downloader – Download Whole Collections</title>
+<meta name="description" content="How to download an entire Steam Workshop collection at once — browser method plus SteamCMD batch commands for large modpacks.">
+<link rel="canonical" href="https://sd.luasu.app/steam-workshop-collection-downloader">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjEyIiBmaWxsPSIjZmZmZmZmIi8+CjxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MiIgaGVpZ2h0PSI2MiIgcng9IjExIiBmaWxsPSJub25lIiBzdHJva2U9IiMxMDEwMTAiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMzIgMTR2MjQiIHN0cm9rZT0iIzEwMTAxMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTIyIDMwbDEwIDEwIDEwLTEwIiBzdHJva2U9IiMxMDEwMTAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik0xNiA0NmgzMiIgc3Ryb2tlPSIjMTAxMDEwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=">
+<style>:root{--ink:#101010;--canvas:#fff;--muted:#555;--soft:#999;--line:#e0e0e0;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}html,body{margin:0;background:var(--canvas);color:var(--ink);font:12px/1.7 var(--mono);-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:48px 20px 80px}
+.crumbs a{color:var(--soft);text-decoration:none;font-size:11px;text-transform:uppercase;letter-spacing:0.08em}
+.crumbs a:hover{color:var(--ink)}
+h1{font-size:32px;font-weight:500;letter-spacing:0.025em;line-height:1.2;margin:20px 0 24px}
+.section-label{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;color:var(--soft);margin:0 0 16px}
+a{color:var(--ink)}
+hr.rule{border:none;border-top:1px solid var(--line);margin:40px 0}
+li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="crumbs"><a href="/">← Steam Workshop Downloader</a></nav>
+  <h1>Steam Workshop Collection Downloader</h1>
+  <p style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 16px">A Steam Workshop collection bundles dozens or hundreds of mods into one list. Downloading every item by hand is painful — here are the two reliable ways to grab a whole collection.</p>
+<h2 class="section-label" style="margin:28px 0 12px">Option 1: One by one via the browser tool</h2>
+<p style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 16px">Open the collection page, right-click each mod and copy its link, then paste each link into our homepage downloader. Works fine for collections under ~10 items.</p>
+<h2 class="section-label" style="margin:28px 0 12px">Option 2: SteamCMD batch script (recommended for big packs)</h2>
+<p style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 16px">SteamCMD can download every item in a collection with a single command: workshop_download_item <appId> <collectionId> downloads the collection manifest, and most third-party wrapper scripts (like steamworkshopdownloader scripts) expand it into per-item downloads automatically.</p>
+<h2 class="section-label" style="margin:28px 0 12px">Tips for huge modpacks</h2>
+<ul style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;padding-left:20px;margin:0 0 16px"><li>Run SteamCMD overnight for collections above 20 GB.</li><li>Check each mod's required DLC — some Workshop items depend on paid content.</li><li>RimWorld and Project Zomboid load mod load-order from your game, not the collection order.</li></ul>
+
+  <h2 class="section-label" style="margin:28px 0 12px">FAQ</h2>
+<div><h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Can I download a collection with one click here?</h3><p style="margin:0 0 14px">Not yet — this tool downloads individual items. SteamCMD is the way to grab everything in bulk.</p><h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">Does the collection order matter?</h3><p style="margin:0 0 14px">For downloading, no. For playing, your game's load order matters.</p></div>
+  <hr class="rule">
+  <p style="color:var(--soft);font-size:12px">Ready to grab a mod? <a href="/" style="color:var(--ink)">Open the downloader →</a></p>
+</div>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Steam Workshop Collection Downloader – Download Whole Collections","description":"How to download an entire Steam Workshop collection at once — browser method plus SteamCMD batch commands for large modpacks.","url":"https://sd.luasu.app/steam-workshop-collection-downloader","isPartOf":{"@type":"WebSite","name":"Steam Workshop Downloader","url":"https://sd.luasu.app"}}
+</script>
+</body>
+</html>

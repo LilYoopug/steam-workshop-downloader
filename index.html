@@ -74,7 +74,7 @@ input:focus{border-color:var(--line-hover)}
 .meta-strip{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 12px;border-top:1px solid var(--line)}
 .meta-strip .l{font-size:11px;color:var(--muted)}
 .meta-strip .r{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
-#title{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;line-height:1.2;margin:32px 0 12px;color:var(--ink)}
+#item-title{font-size:26px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;line-height:1.2;margin:32px 0 12px;color:var(--ink)}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px}
 .badge{border:1px solid var(--line);border-radius:0;padding:4px 8px;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
 .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:0 0 40px}
@@ -121,7 +121,7 @@ img.ph{color:var(--soft)}
   .input-row{gap:6px}
   .input-wrap{width:100%;flex:none}
   .btn{width:100%}
-  #title{font-size:16px;letter-spacing:0.08em}
+  .item-title{font-size:16px;letter-spacing:0.08em}
   .section-label,.eyebrow,#downloadSection h2{font-size:16px;letter-spacing:0.08em}
   .meta-grid{grid-template-columns:1fr 1fr}
   #preview{padding:24px 0}
@@ -160,11 +160,86 @@ img.ph{color:var(--soft)}
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"How do I download a Steam Workshop mod?","acceptedAnswer":{"@type":"Answer","text":"Copy the item's Workshop URL, paste it into the input field, press Load, then click Download ZIP. The file is fetched directly and saved to your device."}},
-    {"@type":"Question","name":"Can I download private Workshop items?","acceptedAnswer":{"@type":"Answer","text":"No. Only publicly visible Workshop items can be previewed and downloaded."}},
-    {"@type":"Question","name":"Why is my Workshop link not working?","acceptedAnswer":{"@type":"Answer","text":"The link must be a public sharedfiles/filedetails URL. Deleted, private, or region-restricted items cannot be fetched."}},
-    {"@type":"Question","name":"Is there a file size limit?","acceptedAnswer":{"@type":"Answer","text":"Downloads are recommended for items up to 500 MB. Larger items may queue or fail on the download service."}},
-    {"@type":"Question","name":"Can I download an entire Steam Workshop collection?","acceptedAnswer":{"@type":"Answer","text":"Not in one click yet. Each item must be downloaded individually by pasting its own Workshop link."}}
+    {
+      "@type": "Question",
+      "name": "How do I download a Steam Workshop mod?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy the item's Workshop URL, paste it into the input field, press Load, then click Download ZIP. The file is fetched directly and saved to your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download private Workshop items?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Only publicly visible Workshop items can be previewed and downloaded."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my Workshop link not working?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The link must be a public sharedfiles/filedetails URL. Deleted, private, or region-restricted items cannot be fetched."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a file size limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Downloads are recommended for items up to 500 MB. Larger items may queue or fail on the download service."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download an entire Steam Workshop collection?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not in one click yet. Each item must be downloaded individually by pasting its own Workshop link."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download Steam Workshop mods without Steam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. This tool fetches public Workshop files directly in your browser — no Steam client or account needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool work for Garry's Mod, RimWorld, or Wallpaper Engine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. It works for any game's public Workshop items — mods, maps, music, wallpaper packs — as long as the item page is publicly visible."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the download fail for large Workshop items?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Very large files (over roughly 500 MB) may queue or time out on the download service. Try again later or use SteamCMD for bulk downloads."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to download Steam Workshop files?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool serves the same ZIP file Steam distributes. As with any mod, scan downloads and check the item's comments before installing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is SteamCMD and when should I use it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SteamCMD is Valve's official command-line tool for downloading Workshop content. Use it for very large collections, automation, or dedicated servers."
+      }
+    }
   ]
 }
 </script>
@@ -174,7 +249,7 @@ img.ph{color:var(--soft)}
   <section class="hero">
     <p class="eyebrow">Workshop Browser</p>
     <h1>STEAM WORKSHOP DOWNLOADER</h1>
-    <p>Paste a Workshop link. Preview loads first; the download link is requested only when you click.</p>
+    <p>Steam Workshop Downloader lets you preview public Steam Workshop items before downloading them. Paste a Workshop item link to view its title, size, update date, and description, then request a ZIP download only when you need it.</p>
     <div class="input-row">
       <div class="input-wrap">
         <input id="link" type="url" placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=...">
@@ -197,7 +272,7 @@ img.ph{color:var(--soft)}
       <img id="shotMain" alt="">
     </div>
     <div id="shotStrip" class="shot-strip"></div>
-    <h2 id="title"></h2>
+    <p id="title" class="item-title"></p>
     <div id="tags" class="badges"></div>
     <div class="meta-grid">
       <div class="meta-card"><h3>Item ID</h3><div id="itemId"></div></div>
@@ -205,7 +280,7 @@ img.ph{color:var(--soft)}
       <div class="meta-card"><h3>Size</h3><div id="size"></div></div>
       <div class="meta-card"><h3>Source</h3><div id="server"></div></div>
     </div>
-    <p class="section-label">Description</p>
+    <h2 class="section-label">Description</h2>
     <div id="desc" class="collapsed"></div>
     <button id="showMore">Show more</button>
   </section>
@@ -213,7 +288,7 @@ img.ph{color:var(--soft)}
   <hr class="rule">
 
   <section id="downloadSection" hidden>
-    <h2>Download</h2>
+    <h2 class="section-label">Download</h2>
     <p id="downloadInfo">No mod loaded.</p>
     <button id="downloadBtn" class="btn btn-primary" disabled>Download ZIP</button>
     <p class="meta-note">Direct download · requested on click only</p>
@@ -222,7 +297,7 @@ img.ph{color:var(--soft)}
   <hr class="rule">
 
   <section id="about" style="padding:40px 0 0">
-    <p class="section-label">How it works</p>
+    <h2 class="section-label">How it works</h2>
     <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
       <ol style="padding-left:20px;margin:0 0 20px">
         <li>Copy a public Steam Workshop item link.</li>
@@ -232,7 +307,7 @@ img.ph{color:var(--soft)}
       </ol>
     </div>
 
-    <p class="section-label">What this tool can do</p>
+    <h2 class="section-label">What this tool can do</h2>
     <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
       <ul style="padding-left:20px;margin:0 0 20px">
         <li>Preview public Workshop items before downloading</li>
@@ -242,7 +317,7 @@ img.ph{color:var(--soft)}
       </ul>
     </div>
 
-    <p class="section-label">Important limitations</p>
+    <h2 class="section-label">Important limitations</h2>
     <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:32px">
       <ul style="padding-left:20px;margin:0">
         <li>Private, deleted, or restricted Workshop items cannot be accessed.</li>
@@ -251,7 +326,7 @@ img.ph{color:var(--soft)}
       </ul>
     </div>
 
-    <p class="section-label">Frequently asked questions</p>
+    <h2 class="section-label">Frequently asked questions</h2>
     <div style="max-width:72ch;color:var(--muted);font-size:12px;line-height:1.7">
       <h3 style="color:var(--ink);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 6px">How do I download a Steam Workshop mod?</h3>
       <p style="margin:0 0 14px">Copy the item's Workshop URL, paste it into the field above, press Load, then click Download ZIP. The file is fetched directly and saved to your device.</p>
